@@ -855,9 +855,6 @@ def hurl_attack(url, n, c, **options):
     if headers is not '':
        dict_headers = headers = dict(j.split('#') for j in [i.strip() for i in headers.split(';') if i != ''])
 
-    if this_url.lower().startswith("https://") and hasattr(ssl, '_create_unverified_context'):
-       context = ssl._create_unverified_context()
-
     for i, instance in enumerate(instances):
         this_url = urls[i % url_count]
         params.append({
@@ -921,6 +918,7 @@ def hurl_attack(url, n, c, **options):
            request.add_header(key, value)
 
         if this_url.lower().startswith("https://") and hasattr(ssl, '_create_unverified_context'):
+           context = ssl._create_unverified_context()
            response = urlopen(request, context=context)
         else:
            response = urlopen(request)
