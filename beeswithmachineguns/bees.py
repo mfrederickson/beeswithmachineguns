@@ -792,7 +792,6 @@ def hurl_attack(url, n, c, **options):
     """
     print options.get('zone')
     username, key_name, zone, instance_ids = _read_server_list(options.get('zone'))
-    headers = options.get('headers', '')
     contenttype = options.get('contenttype', '')
     csv_filename = options.get("csv_filename", '')
     cookies = options.get('cookies', '')
@@ -851,11 +850,8 @@ def hurl_attack(url, n, c, **options):
     if basic_auth is not '':
        authentication = base64.encodestring(basic_auth).replace('\n', '')
 
-    dict_headers = {}
-    if headers is not '':
-       dict_headers = headers = dict(j.split('#') for j in [i.strip() for i in headers.split(';') if i != ''])
-
     for i, instance in enumerate(instances):
+        headers = options.get('headers', '')
         this_url = urls[i % url_count]
         params.append({
             'i': i,
@@ -913,6 +909,10 @@ def hurl_attack(url, n, c, **options):
         # Ping url so it will be cached for testing
         if contenttype is not '':
            request.add_header("Content-Type", contenttype)
+
+        dict_headers = {}
+        if headers is not '':
+           dict_headers = headers = dict(j.split('#') for j in [k.strip() for k in headers.split(';') if k != ''])
 
         for key, value in dict_headers.items():
            request.add_header(key, value)
