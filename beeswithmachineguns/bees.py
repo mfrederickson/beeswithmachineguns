@@ -359,7 +359,8 @@ def _sting(params):
     # Ping url so it will be cached for testing
     dict_headers = {}
     if headers is not '':
-        dict_headers = headers = dict(j.split(':') for j in [i.strip() for i in headers.split(';') if i != ''])
+        # dict_headers = headers = dict(j.split(':') for j in [i.strip() for i in headers.split(';') if i != ''])
+        dict_headers = headers = dict(j.split('#') for j in [i.strip() for i in headers.split(';') if i != ''])
 
     if contenttype is not '':
         request.add_header("Content-Type", contenttype)
@@ -402,9 +403,10 @@ def _attack(params):
 
         options = ''
         if params['headers'] is not '':
+            # print('  headers: %s' % params['headers'])
             for h in params['headers'].split(';'):
                 if h != '':
-                    options += ' -H "%s"' % h.strip()
+                    options += ' -H "%s"' % h.strip().replace('#', ':')
 
         if params['contenttype'] is not '':
             options += ' -T %s' % params['contenttype']
@@ -851,7 +853,7 @@ def hurl_attack(url, n, c, **options):
 
     dict_headers = {}
     if headers is not '':
-       dict_headers = headers = dict(j.split(':') for j in [i.strip() for i in headers.split(';') if i != ''])
+       dict_headers = headers = dict(j.split('#') for j in [i.strip() for i in headers.split(';') if i != ''])
 
     if this_url.lower().startswith("https://") and hasattr(ssl, '_create_unverified_context'):
        context = ssl._create_unverified_context()
@@ -976,7 +978,7 @@ def _hurl_attack(params):
         if params['headers'] is not '':
             for h in params['headers'].split(';'):
                 if h != '':
-                    options += ' -H "%s"' % h.strip()
+                    options += ' -H "%s"' % h.strip().replace('#', ':')
 
         if params['contenttype'] is not '':
             options += ' -H \"Content-Type : %s\"' % params['contenttype']
